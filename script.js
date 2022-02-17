@@ -1,6 +1,8 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { cp } = require('fs');
+const { arrayBuffer } = require('stream/consumers');
+const { workerData } = require('worker_threads');
 
 const url = "https://news.ycombinator.com/";
 
@@ -50,6 +52,31 @@ const getContent = $ =>
         }
     }).toArray();
 
+const countWords = (title) => {
+    return title.split(' ').length;
+}
+
+//const sortByKey(data, key){
+//    return data.sort(function(a,b) {
+//        var x = a['key']
+//    });
+//}
+
+const filter1 = (data) => {
+    const filtered1 = data.filter((data) => countWords(data.title) > 5);
+    const filtered2 = filtered1.sort((a,b) => (a.comments > b.comments) ? 1 : ((b.comments > a.comments) ? -1 : 0));
+
+    return filtered2;
+};
+
+const filter2 = (data) => {
+    const filtered1 = data.filter((data) => countWords(data.title) < 5);
+    const filtered2 = filtered1.sort((a,b) => (a.score > b.score) ? 1 : ((b.comments > a.comments) ? -1 : 0));
+
+    return filtered2;
+};
+
+
 const init = async () => {
     try {
         const {data} = await axios.get(url);
@@ -58,6 +85,12 @@ const init = async () => {
         const content = getContent($);
 
         console.log(content);
+        console.log("-----------------");
+        console.log("Filtro 1:");
+        console.log(filter1(content));
+        console.log("-----------------");
+        console.log("Filtro 2:");
+        console.log(filter2(content));
 
     } catch (e){
         console.error(e);
