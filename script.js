@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const { cp } = require('fs');
+const { Module } = require('module');
 const { arrayBuffer } = require('stream/consumers');
 const { workerData } = require('worker_threads');
 
@@ -14,7 +15,7 @@ const getContent = $ =>
         var score = $(id_score).text();
         var commentsNo = $(id_score).parent().children("a").last().text();
 
-        order = order.match((/(\d+)/))
+        order = order.match((/(\d+)/));
         commentsNo = commentsNo.match((/(\d+)/));
         score = score.match((/(\d+)/));
 
@@ -52,26 +53,18 @@ const getContent = $ =>
         }
     }).toArray();
 
-const countWords = (title) => {
-    return title.split(' ').length;
-}
-
-//const sortByKey(data, key){
-//    return data.sort(function(a,b) {
-//        var x = a['key']
-//    });
-//}
+const countWords = (title) => title.split(' ').length;
 
 const filter1 = (data) => {
     const filtered1 = data.filter((data) => countWords(data.title) > 5);
-    const filtered2 = filtered1.sort((a,b) => (a.comments > b.comments) ? 1 : ((b.comments > a.comments) ? -1 : 0));
+    const filtered2 = filtered1.sort((a,b) => (a.comments > b.comments) ? -1 : ((b.comments > a.comments) ? 1 : 0));
 
     return filtered2;
 };
 
 const filter2 = (data) => {
     const filtered1 = data.filter((data) => countWords(data.title) < 5);
-    const filtered2 = filtered1.sort((a,b) => (a.score > b.score) ? 1 : ((b.comments > a.comments) ? -1 : 0));
+    const filtered2 = filtered1.sort((a,b) => (a.score > b.score) ? -1 : ((b.comments > a.comments) ? 1 : 0));
 
     return filtered2;
 };
@@ -86,10 +79,10 @@ const init = async () => {
 
         console.log(content);
         console.log("-----------------");
-        console.log("Filtro 1:");
+        console.log("Filter 1:");
         console.log(filter1(content));
         console.log("-----------------");
-        console.log("Filtro 2:");
+        console.log("Filter 2:");
         console.log(filter2(content));
 
     } catch (e){
@@ -98,3 +91,5 @@ const init = async () => {
 };
 
 init();
+
+module.exports = {filter1, filter2, countWords};
