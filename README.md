@@ -20,10 +20,10 @@ Adittionaly, two filters are included:
 
 ## Execution
 
-First is needed to install axios and cheerios.
+To run this project install axios, cheerios and jest
 
 ```bash
-  npm install axios cheerios
+  npm install
 ```
 
 For the execution of the script
@@ -32,12 +32,6 @@ For the execution of the script
   node script.js
 ```
 ## Automated Testing with Jest
-
-Start installing Jest
-
-```bash
-  npm install jest
-```
 
 This automated testing consist in 4 tests (2 for each filter function).
 
