@@ -1,5 +1,6 @@
 const {filter1, filter2, countWords} = require("./script.js");
 
+//15 entries from Feb 17 night
 const mockData = [  
     {
     title: 'A brief history of gasoline: Searching for the magic bullet',
@@ -90,18 +91,47 @@ const mockData = [
     order: 30,
     comments: 10,
     score: 53
-  },
-  {
-    title: 'LanguageTool – FOSS ',
-    order: 10,
-    comments: 5,
-    score: 5
   }
 ];
 
+//TroubleSolved: if the result one the filter is empty or 1 (like mockData), checkIfSorted will fail.
+const checkIfSorted = (arr) => {
+  if (arr.length <= 1){
+    return true;
+  }
+  else {
+    return arr.reduce((n, item) => item <= n);
+  }
+}
+
 describe("This tests filter1.", () => {
+
     it("Expect the title to be greater than 5 words", () => {
-        const filterData = filter1(mockData);
-        filterData.map((entry) => expect(countWords(entry.title)).toBeGreaterThan(5));
+      const filterData = filter1(mockData);
+      filterData.map((entry) => expect(countWords(entry.title)).toBeGreaterThan(5));
     });
+
+    it("Expect to be orderer by number of comments", () => {
+      const filterData = filter1(mockData);
+      const sortedComments = filterData.map((a) => a.comments); //Can change filterData to mockData to confirm the test 
+      expect(checkIfSorted(sortedComments)).toBe(true);
+    });
+
+});
+
+describe("This tests filter2.", () => {
+
+  it("Expect the title to be less than 5 words", () => {
+    const filterData = filter2(mockData);
+    filterData.map((entry) => expect(countWords(entry.title)).toBeLessThan(5));
+  });
+
+  it("Expect to be orderer by score", () => {
+    const filterData = filter2(mockData);
+    console.log(filterData);
+    console.log("FFFFFFFFFFFFF");
+
+    const sortedComments = filterData.map((a) => a.score); //Can change filterData to mockData to confirm the test 
+    expect(checkIfSorted(sortedComments)).toBe(true);
+  });
 });

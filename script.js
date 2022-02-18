@@ -1,9 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { cp } = require('fs');
-const { Module } = require('module');
-const { arrayBuffer } = require('stream/consumers');
-const { workerData } = require('worker_threads');
 
 const url = "https://news.ycombinator.com/";
 
@@ -76,7 +72,8 @@ const init = async () => {
 
         const $ = cheerio.load(data);
         const content = getContent($);
-
+        console.log("-----------------");
+        console.log("30 first entries from Hacker News:");
         console.log(content);
         console.log("-----------------");
         console.log("Filter 1:");
